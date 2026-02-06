@@ -31,5 +31,5 @@ def spotify_handler():
 def test_download_track_zotify_integration_fails_without_implementation(spotify_handler):
     mock_track_url = "https://open.spotify.com/track/12345"
 
-    with pytest.raises(AttributeError, match="_download_track_with_zotify not yet implemented"):
+    with pytest.raises(NotImplementedError, match="download_track not yet implemented"):
         spotify_handler._download_track(mock_track_url)

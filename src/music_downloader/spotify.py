@@ -11,6 +11,7 @@ from typing import Callable, Optional
 
 from .cache import DownloadCache
 from .utils import sanitize_filename, ensure_directory
+from .zotify_downloader import ZotifyDownloader
 
 
 class SpotifyConfigError(Exception):
@@ -29,7 +30,7 @@ class SpotifyHandler:
     Responsabilidades:
         - Autenticación con Spotify API
         - Extraer metadata de tracks y playlists
-        - Buscar y descargar desde YouTube
+        - Descargar usando Zotify
     """
     
     def __init__(
@@ -67,10 +68,20 @@ class SpotifyHandler:
             client_secret=client_secret
         )
         self._spotify = spotipy.Spotify(auth_manager=auth_manager)
+        
+        # Inicializar Zotify Downloader
+        self._zotify_downloader = ZotifyDownloader(
+            music_dir=music_dir,
+            on_progress=on_progress
+        )
     
     def _download_track_with_zotify(self, track_url: str, output_dir: Path, playlist_name: Optional[str]) -> dict:
-        """Placeholder for Zotify download integration."""
-        raise AttributeError("_download_track_with_zotify not yet implemented")
+        """Descarga un track individual usando Zotify."""
+        return self._zotify_downloader.download_track(
+            track_url,
+            output_dir=output_dir,
+            playlist_name=playlist_name
+        )
 
     def download(
         self,
