@@ -5,9 +5,17 @@ from pathlib import Path
 from typing import Optional, Callable
 
 class ZotifyDownloader:
-    def __init__(self, music_dir: Path, on_progress: Optional[Callable[[str], None]] = None):
+    def __init__(
+        self,
+        music_dir: Path,
+        on_progress: Optional[Callable[[str], None]] = None,
+        download_format: str = "mp3",
+        download_quality: str = "320"
+    ):
         self._music_dir = music_dir
         self._on_progress = on_progress or (lambda x: None)
+        self._download_format = download_format
+        self._download_quality = download_quality
 
     def download_track(self, track_url: str, output_dir: Path, playlist_name: Optional[str] = None) -> dict:
         # Build Zotify command
@@ -15,8 +23,8 @@ class ZotifyDownloader:
             "zotify",
             track_url,
             "--output", str(output_dir),
-            "--download-format", "mp3", # Assuming mp3 for now
-            "--download-quality", "320"  # Assuming 320kbps for now
+            "--download-format", self._download_format,
+            "--download-quality", self._download_quality
         ]
         # Zotify does not have --playlist-name for single tracks directly,
         # the output_dir handles where it goes.

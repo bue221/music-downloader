@@ -72,7 +72,9 @@ class SpotifyHandler:
         # Inicializar Zotify Downloader
         self._zotify_downloader = ZotifyDownloader(
             music_dir=music_dir,
-            on_progress=on_progress
+            on_progress=on_progress,
+            download_format="mp3", # Default format
+            download_quality="320" # Default quality
         )
     
     def _download_track_with_zotify(self, track_url: str, output_dir: Path, playlist_name: Optional[str]) -> dict:
