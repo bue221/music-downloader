@@ -2,7 +2,7 @@
 
 ## Fase 1: Investigación y Configuración de Zotify
 
-- [x] Tarea: Investigar la documentación y uso de Zotify.
+- [x] Tarea: Investigar la documentación y uso de Zotify. [2716c9b]
     - [ ] Identificar cómo instalar Zotify.
     - [ ] Entender los comandos y opciones principales de Zotify.
 - [ ] Tarea: Instalar Zotify como herramienta externa o librería.
