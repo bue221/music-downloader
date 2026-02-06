@@ -34,6 +34,7 @@ make download PLATFORM=spotify URL="https://open.spotify.com/track/..."
 1. Crea una app en [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Copia `.env.example` a `.env`
 3. Configura `SPOTIFY_CLIENT_ID` y `SPOTIFY_CLIENT_SECRET`
+4. Si no quieren usar spotify pueden transferir sus listas gratis a youtube con esta herramienta y posteriormente descargar desde youtube https://www.tunemymusic.com/home
 
 ## Comandos Make
 
