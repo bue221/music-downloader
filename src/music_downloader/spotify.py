@@ -4,8 +4,7 @@ Extrae metadata de Spotify y descarga desde YouTube.
 """
 
 import os
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -14,9 +13,7 @@ from .utils import sanitize_filename, ensure_directory
 from .zotify_downloader import ZotifyDownloader
 
 
-class SpotifyConfigError(Exception):
-    """Error de configuración de Spotify."""
-    pass
+
 
 
 class SpotifyDownloadError(Exception):
@@ -28,8 +25,7 @@ class SpotifyHandler:
     """Gestiona la integración con Spotify.
     
     Responsabilidades:
-        - Autenticación con Spotify API
-        - Extraer metadata de tracks y playlists
+        - Extraer metadata de tracks y playlists (de Zotify o parsing)
         - Descargar usando Zotify
     """
     
@@ -52,22 +48,6 @@ class SpotifyHandler:
         self._music_dir = music_dir
         self._cache = cache
         self._on_progress = on_progress or (lambda x: None)
-        
-        # Verificar credenciales
-        client_id = os.getenv('SPOTIFY_CLIENT_ID')
-        client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
-        
-        if not client_id or not client_secret:
-            raise SpotifyConfigError(
-                "Configura SPOTIFY_CLIENT_ID y SPOTIFY_CLIENT_SECRET en .env"
-            )
-        
-        # Inicializar cliente de Spotify
-        auth_manager = SpotifyClientCredentials(
-            client_id=client_id,
-            client_secret=client_secret
-        )
-        self._spotify = spotipy.Spotify(auth_manager=auth_manager)
         
         # Inicializar Zotify Downloader
         self._zotify_downloader = ZotifyDownloader(
@@ -135,12 +115,9 @@ class SpotifyHandler:
             self._on_progress(f"⏭️  Ya descargada (Spotify)")
             return {"id": track_id, "skipped": True, "path": path}
         
-        # Obtener metadata de Spotify
-        track = self._spotify.track(track_id)
-        title = track['name']
-        artists = ', '.join(a['name'] for a in track['artists'])
-        
-        self._on_progress(f"🎧 Descargando con Zotify: {artists} - {title}")
+        # Obtener metadata (ya no vía Spotipy directamente)
+        # Zotify se encargará de la descarga y, eventualmente, del retorno de metadata.
+        self._on_progress(f"🎧 Descargando track: {url} con Zotify")
         
         # Llamar al método de descarga de Zotify
         result = self._download_track_with_zotify(
@@ -151,6 +128,9 @@ class SpotifyHandler:
         
         # Registrar con ID de Spotify también
         if not result.get('skipped') and result.get('path'):
+            # Placeholder for actual title and artist from Zotify output
+            title = result.get('title', 'Unknown Title') 
+            artists = result.get('artist', 'Unknown Artist')
             self._cache.register(
                 song_id=f"spotify:{track_id}",
                 title=title,
@@ -161,6 +141,7 @@ class SpotifyHandler:
             )
         
         return result
+
     
     def _download_playlist(
         self,
@@ -179,20 +160,16 @@ class SpotifyHandler:
             Lista de diccionarios con info de canciones.
         """
         playlist_id = self._extract_id(url, 'playlist')
-        playlist_metadata = self._spotify.playlist(playlist_id)
+        # Metadata will be handled by Zotify or parsing its output
         
-        if not playlist_name:
-            playlist_name = sanitize_filename(playlist_metadata['name'])
-        
-        self._on_progress(
-            f"📁 Playlist Spotify: {playlist_name} "
-            f"({playlist_metadata['tracks']['total']} canciones) con Zotify."
-        )
+        self._on_progress(f"📁 Playlist Spotify: {url} con Zotify.")
         
         # Determinar directorio de salida para la playlist
         if output_dir is None:
+            # Placeholder for playlist name from Zotify output or track URL
+            # For now, just use the playlist ID for the directory name
             playlist_dir = ensure_directory(
-                self._music_dir / "playlists" / playlist_name
+                self._music_dir / "playlists" / playlist_id 
             )
         else:
             playlist_dir = ensure_directory(output_dir)
@@ -201,7 +178,7 @@ class SpotifyHandler:
         results = self._zotify_downloader.download_playlist(
             url,
             output_dir=playlist_dir,
-            playlist_name=playlist_name
+            playlist_name=playlist_name # This might need to be passed for Zotify for organization
         )
         return results
 
@@ -223,22 +200,16 @@ class SpotifyHandler:
             Lista de diccionarios con info de canciones.
         """
         album_id = self._extract_id(url, 'album')
-        album = self._spotify.album(album_id)
+        # Metadata will be handled by Zotify or parsing its output
         
-        if not playlist_name:
-            fixed_name = sanitize_filename(album['name'])
-            artist = album['artists'][0]['name']
-            playlist_name = f"{artist} - {fixed_name}"
-            
-        self._on_progress(
-            f"💿 Álbum: {playlist_name} "
-            f"({album['total_tracks']} canciones) con Zotify."
-        )
+        self._on_progress(f"💿 Álbum Spotify: {url} con Zotify.")
         
         # Crear directorio para el álbum
         if output_dir is None:
+            # Placeholder for album name from Zotify output or track URL
+            # For now, just use the album ID for the directory name
             album_dir = ensure_directory(
-                self._music_dir / "playlists" / playlist_name
+                self._music_dir / "playlists" / album_id
             )
         else:
             album_dir = ensure_directory(output_dir)
@@ -251,6 +222,7 @@ class SpotifyHandler:
         )
         
         return results
+
     
     def _extract_id(self, url: str, resource_type: str) -> str:
         """Extrae el ID de un recurso de Spotify.

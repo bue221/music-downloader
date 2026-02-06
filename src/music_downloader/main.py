@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 from .cache import DownloadCache
 from .youtube import YouTubeDownloader, YouTubeDownloadError
-from .spotify import SpotifyHandler, SpotifyConfigError, SpotifyDownloadError
+from .spotify import SpotifyHandler, SpotifyDownloadError
 
 
 # Cargar variables de entorno
@@ -127,10 +127,6 @@ def download(platform: str, url: str, file: str, name: str):
                     )
                     all_results.extend(results)
                     
-            except SpotifyConfigError as e:
-                click.echo(f"❌ Error de configuración: {e}", err=True)
-                click.echo("   Copia .env.example a .env y configura tus credenciales.")
-                raise SystemExit(1)
         
         # Resumen
         downloaded = sum(1 for r in all_results if not r.get('skipped') and not r.get('error'))

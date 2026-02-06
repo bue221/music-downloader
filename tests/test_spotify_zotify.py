@@ -21,10 +21,6 @@ def spotify_handler():
     
     # Mock internal calls that would go to Spotify API
     handler._extract_id = MagicMock(return_value="12345")
-    handler._spotify.track = MagicMock(return_value={
-        'name': 'Test Track',
-        'artists': [{'name': 'Test Artist'}]
-    })
     
     # Mock ZotifyDownloader
     handler._zotify_downloader = MagicMock()
