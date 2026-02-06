@@ -24,7 +24,7 @@
 - [x] Tarea: Escribir tests que fallen (Red Phase) para la integración de Zotify. [de24b5b]
     - [ ] Crear tests unitarios para las funciones del "wrapper" de Zotify.
     - [ ] Crear tests de integración para la descarga de canciones/playlists de Spotify.
-- [ ] Tarea: Implementar el "wrapper" de Python para Zotify (Green Phase).
+- [x] Tarea: Implementar el "wrapper" de Python para Zotify (Green Phase). [6f90c91]
     - [ ] Escribir el código para invocar a Zotify a través del "wrapper".
     - [ ] Conectar el "wrapper" con la lógica existente para Spotify.
 - [ ] Tarea: Refactorizar el código de integración de Zotify.
