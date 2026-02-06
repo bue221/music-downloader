@@ -9,7 +9,7 @@
     - [ ] Configurar el entorno para que Zotify sea accesible desde el proyecto.
 - [x] Tarea: Conductor - User Manual Verification 'Fase 1: Investigación y Configuración de Zotify' (Protocol in workflow.md)
 
-## Fase 2: Refactorización y Preparación del Código Existente
+## Fase 2: Refactorización y Preparación del Código Existente [checkpoint: 7ef8951]
 
 - [x] Tarea: Archivar o eliminar la lógica de búsqueda en YouTube en `spotify.py`. [e2602a0]
     - [ ] Identificar y aislar la sección relevante del código en `spotify.py`.
