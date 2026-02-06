@@ -11,7 +11,7 @@
 
 ## Fase 2: Refactorización y Preparación del Código Existente
 
-- [ ] Tarea: Archivar o eliminar la lógica de búsqueda en YouTube en `spotify.py`.
+- [x] Tarea: Archivar o eliminar la lógica de búsqueda en YouTube en `spotify.py`. [e2602a0]
     - [ ] Identificar y aislar la sección relevante del código en `spotify.py`.
     - [ ] Asegurarse de que la eliminación o archivo no afecte otras funcionalidades.
 - [ ] Tarea: Conductor - User Manual Verification 'Fase 2: Refactorización y Preparación del Código Existente' (Protocol in workflow.md)
