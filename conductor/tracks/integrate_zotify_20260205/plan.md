@@ -1,6 +1,6 @@
 # Plan de Implementación: Integrar Zotify para mejorar la calidad de descarga de Spotify y la organización de la biblioteca.
 
-## Fase 1: Investigación y Configuración de Zotify
+## Fase 1: Investigación y Configuración de Zotify [checkpoint: 9fb03f6]
 
 - [x] Tarea: Investigar la documentación y uso de Zotify. [2716c9b]
     - [ ] Identificar cómo instalar Zotify.
