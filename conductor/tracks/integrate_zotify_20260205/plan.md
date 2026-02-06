@@ -33,7 +33,7 @@
 
 ## Fase 4: Pruebas y Validación
 
-- [ ] Tarea: Ejecutar todas las pruebas unitarias y de integración.
+- [x] Tarea: Ejecutar todas las pruebas unitarias y de integración. [94be6fa]
     - [ ] Verificar que todas las funcionalidades existentes y nuevas operan correctamente.
 - [ ] Tarea: Validar la calidad de las descargas de Spotify.
     - [ ] Descargar varias canciones y playlists de Spotify y verificar su calidad de audio.
