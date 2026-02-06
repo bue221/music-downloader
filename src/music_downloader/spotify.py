@@ -166,7 +166,7 @@ class SpotifyHandler:
         output_dir: Optional[Path] = None,
         playlist_name: Optional[str] = None
     ) -> list[dict]:
-        """Descarga una playlist completa de Spotify.
+        """Descarga una playlist completa de Spotify usando Zotify.
         
         Args:
             url: URL de la playlist.
@@ -177,17 +177,17 @@ class SpotifyHandler:
             Lista de diccionarios con info de canciones.
         """
         playlist_id = self._extract_id(url, 'playlist')
-        playlist = self._spotify.playlist(playlist_id)
+        playlist_metadata = self._spotify.playlist(playlist_id)
         
         if not playlist_name:
-            playlist_name = sanitize_filename(playlist['name'])
+            playlist_name = sanitize_filename(playlist_metadata['name'])
         
         self._on_progress(
             f"📁 Playlist Spotify: {playlist_name} "
-            f"({playlist['tracks']['total']} canciones)"
+            f"({playlist_metadata['tracks']['total']} canciones) con Zotify."
         )
         
-        # Crear directorio para la playlist
+        # Determinar directorio de salida para la playlist
         if output_dir is None:
             playlist_dir = ensure_directory(
                 self._music_dir / "playlists" / playlist_name
@@ -195,39 +195,14 @@ class SpotifyHandler:
         else:
             playlist_dir = ensure_directory(output_dir)
         
-        results = []
-        tracks = playlist['tracks']
-        
-        while tracks:
-            for item in tracks['items']:
-                track = item.get('track')
-                if not track:
-                    continue
-                
-                track_url = track['external_urls'].get('spotify')
-                if track_url:
-                    try:
-                        result = self._download_track(
-                            track_url,
-                            output_dir=playlist_dir,
-                            playlist_name=playlist_name
-                        )
-                        results.append(result)
-                    except Exception as e:
-                        self._on_progress(f"❌ Error: {e}")
-                        results.append({
-                            "id": track.get('id', 'unknown'),
-                            "title": track.get('name', 'Unknown'),
-                            "error": str(e)
-                        })
-            
-            # Siguiente página
-            if tracks['next']:
-                tracks = self._spotify.next(tracks)
-            else:
-                break
-        
+        # Usar ZotifyDownloader para descargar la playlist completa
+        results = self._zotify_downloader.download_playlist(
+            url,
+            output_dir=playlist_dir,
+            playlist_name=playlist_name
+        )
         return results
+
     
     def _download_album(
         self,
@@ -235,7 +210,7 @@ class SpotifyHandler:
         output_dir: Optional[Path] = None,
         playlist_name: Optional[str] = None
     ) -> list[dict]:
-        """Descarga un álbum completo.
+        """Descarga un álbum completo de Spotify usando Zotify.
         
         Args:
             url: URL del álbum.
@@ -255,7 +230,7 @@ class SpotifyHandler:
             
         self._on_progress(
             f"💿 Álbum: {playlist_name} "
-            f"({album['total_tracks']} canciones)"
+            f"({album['total_tracks']} canciones) con Zotify."
         )
         
         # Crear directorio para el álbum
@@ -266,23 +241,12 @@ class SpotifyHandler:
         else:
             album_dir = ensure_directory(output_dir)
         
-        results = []
-        for track in album['tracks']['items']:
-            track_url = f"https://open.spotify.com/track/{track['id']}"
-            try:
-                result = self._download_track(
-                    track_url,
-                    output_dir=album_dir,
-                    playlist_name=album_name
-                )
-                results.append(result)
-            except Exception as e:
-                self._on_progress(f"❌ Error: {e}")
-                results.append({
-                    "id": track.get('id', 'unknown'),
-                    "title": track.get('name', 'Unknown'),
-                    "error": str(e)
-                })
+        # Usar ZotifyDownloader para descargar el álbum completo
+        results = self._zotify_downloader.download_playlist( # Zotify handles albums as playlists effectively
+            url,
+            output_dir=album_dir,
+            playlist_name=playlist_name
+        )
         
         return results
     

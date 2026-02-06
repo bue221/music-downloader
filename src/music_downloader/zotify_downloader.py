@@ -34,4 +34,23 @@ class ZotifyDownloader:
             raise RuntimeError(f"Zotify download failed: {e.stderr}")
 
     def download_playlist(self, playlist_url: str, output_dir: Path, playlist_name: Optional[str] = None) -> list[dict]:
-        raise NotImplementedError("download_playlist not yet implemented")
+        # Build Zotify command for playlist
+        cmd = [
+            "zotify",
+            playlist_url,
+            "--output", str(output_dir),
+            "--download-format", "mp3", # Assuming mp3 for now
+            "--download-quality", "320"  # Assuming 320kbps for now
+        ]
+        # Zotify automatically organizes by playlist name if downloading a playlist URL
+
+        self._on_progress(f"🚀 Ejecutando Zotify para playlist: {' '.join(cmd)}")
+        
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            self._on_progress(f"✅ Zotify output: {result.stdout}")
+            # Placeholder: Zotify output needs to be parsed to get individual track info
+            return [{"id": playlist_url, "path": output_dir, "skipped": False}]
+        except subprocess.CalledProcessError as e:
+            self._on_progress(f"❌ Error en Zotify para playlist: {e.stderr}")
+            raise RuntimeError(f"Zotify playlist download failed: {e.stderr}")

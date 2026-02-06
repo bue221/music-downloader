@@ -19,12 +19,14 @@ def test_download_track_raises_runtime_error(zotify_downloader):
         with pytest.raises(RuntimeError, match="Zotify download failed"):
             zotify_downloader.download_track(mock_track_url, mock_output_dir)
 
-def test_download_playlist_raises_not_implemented_error(zotify_downloader):
+def test_download_playlist_raises_runtime_error(zotify_downloader):
     mock_playlist_url = "https://open.spotify.com/playlist/12345"
     mock_output_dir = Path("mock_output")
 
-    with pytest.raises(NotImplementedError, match="download_playlist not yet implemented"):
-        zotify_downloader.download_playlist(mock_playlist_url, mock_output_dir)
+    with patch("music_downloader.zotify_downloader.subprocess.run") as mock_subprocess_run:
+        mock_subprocess_run.side_effect = subprocess.CalledProcessError(returncode=1, cmd=["zotify"], stderr="Error from zotify")
+        with pytest.raises(RuntimeError, match="Zotify playlist download failed"):
+            zotify_downloader.download_playlist(mock_playlist_url, mock_output_dir)
 
 def test_zotify_download_track_calls_subprocess(zotify_downloader):
     mock_track_url = "https://open.spotify.com/track/12345"
