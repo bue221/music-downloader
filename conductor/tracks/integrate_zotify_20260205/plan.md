@@ -29,7 +29,7 @@
     - [ ] Conectar el "wrapper" con la lógica existente para Spotify.
 - [x] Tarea: Refactorizar el código de integración de Zotify. [75f8e6d]
     - [ ] Mejorar la legibilidad y eficiencia del "wrapper" y la integración.
-- [ ] Tarea: Conductor - User Manual Verification 'Fase 3: Integración de Zotify y Desarrollo del Wrapper' (Protocol in workflow.md)
+- [x] Tarea: Conductor - User Manual Verification 'Fase 3: Integración de Zotify y Desarrollo del Wrapper' (Protocol in workflow.md)
 
 ## Fase 4: Pruebas y Validación
 
