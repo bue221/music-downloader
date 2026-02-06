@@ -16,7 +16,7 @@
     - [ ] Asegurarse de que la eliminación o archivo no afecte otras funcionalidades.
 - [x] Tarea: Conductor - User Manual Verification 'Fase 2: Refactorización y Preparación del Código Existente' (Protocol in workflow.md)
 
-## Fase 3: Integración de Zotify y Desarrollo del Wrapper
+## Fase 3: Integración de Zotify y Desarrollo del Wrapper [checkpoint: 5181f56]
 
 - [x] Tarea: Diseñar la interfaz del "wrapper" de Python para Zotify. [8d2db07]
     - [ ] Definir las funciones principales para invocar a Zotify (descarga de canción/playlist).
