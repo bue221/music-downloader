@@ -21,7 +21,7 @@
 - [x] Tarea: Diseñar la interfaz del "wrapper" de Python para Zotify. [8d2db07]
     - [ ] Definir las funciones principales para invocar a Zotify (descarga de canción/playlist).
     - [ ] Asegurar que el "wrapper" pueda mantener la estructura de carpetas actual.
-- [ ] Tarea: Escribir tests que fallen (Red Phase) para la integración de Zotify.
+- [x] Tarea: Escribir tests que fallen (Red Phase) para la integración de Zotify. [de24b5b]
     - [ ] Crear tests unitarios para las funciones del "wrapper" de Zotify.
     - [ ] Crear tests de integración para la descarga de canciones/playlists de Spotify.
 - [ ] Tarea: Implementar el "wrapper" de Python para Zotify (Green Phase).
