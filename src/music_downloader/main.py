@@ -112,20 +112,19 @@ def download(platform: str, url: str, file: str, name: str):
                 all_results.extend(results)
             
         elif platform == 'spotify':
-            try:
-                handler = SpotifyHandler(
-                    music_dir=MUSIC_DIR,
-                    cache=cache,
-                    on_progress=print_status
+            handler = SpotifyHandler(
+                music_dir=MUSIC_DIR,
+                cache=cache,
+                on_progress=print_status
+            )
+            
+            for link in urls_to_process:
+                results = handler.download(
+                    link, 
+                    output_dir=custom_output_dir, 
+                    playlist_name=name
                 )
-                
-                for link in urls_to_process:
-                    results = handler.download(
-                        link, 
-                        output_dir=custom_output_dir, 
-                        playlist_name=name
-                    )
-                    all_results.extend(results)
+                all_results.extend(results)
                     
         
         # Resumen
