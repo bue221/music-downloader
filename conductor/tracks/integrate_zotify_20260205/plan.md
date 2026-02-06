@@ -18,7 +18,7 @@
 
 ## Fase 3: Integración de Zotify y Desarrollo del Wrapper
 
-- [ ] Tarea: Diseñar la interfaz del "wrapper" de Python para Zotify.
+- [x] Tarea: Diseñar la interfaz del "wrapper" de Python para Zotify. [8d2db07]
     - [ ] Definir las funciones principales para invocar a Zotify (descarga de canción/playlist).
     - [ ] Asegurar que el "wrapper" pueda mantener la estructura de carpetas actual.
 - [ ] Tarea: Escribir tests que fallen (Red Phase) para la integración de Zotify.

@@ -44,3 +44,37 @@ make download PLATFORM=spotify URL="https://open.spotify.com/track/..."
 | `make download` | Descarga música |
 | `make list` | Lista canciones descargadas |
 | `make clean-cache` | Limpia caché |
+| `make help` | Muestra los comandos make disponibles |
+
+## Uso Directo de CLI (`uv run music-dl`)
+
+Para un control más granular y acceso a todas las funcionalidades, puedes ejecutar el CLI directamente usando `uv run music-dl`.
+
+### Descargar Música
+
+```bash
+# Descargar una canción o playlist de YouTube/Spotify
+uv run music-dl download --platform <youtube|spotify> --url <URL>
+
+# Descargar canciones desde un archivo de texto, especificando el nombre de la carpeta de destino
+uv run music-dl download --file <ruta/a/archivo.txt> --name <nombre_carpeta_destino>
+```
+
+### Listar Canciones Descargadas
+
+```bash
+uv run music-dl list
+```
+
+### Limpiar Caché
+
+```bash
+uv run music-dl clear-cache
+```
+
+### Mostrar Versión
+
+```bash
+uv run music-dl --version
+```
+
