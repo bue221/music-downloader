@@ -26,10 +26,23 @@ def spotify_handler():
         'artists': [{'name': 'Test Artist'}]
     })
     
+    # Mock ZotifyDownloader
+    handler._zotify_downloader = MagicMock()
+    handler._zotify_downloader.download_track.return_value = {"id": "12345", "path": Path("mock_path"), "skipped": False}
+    
     return handler
 
-def test_download_track_zotify_integration_fails_without_implementation(spotify_handler):
+def test_download_track_zotify_integration_calls_zotify_downloader(spotify_handler):
     mock_track_url = "https://open.spotify.com/track/12345"
+    mock_output_dir = Path("mock_output")
+    mock_playlist_name = "Mock Playlist"
 
-    with pytest.raises(NotImplementedError, match="download_track not yet implemented"):
-        spotify_handler._download_track(mock_track_url)
+    # Call _download_track, which should internally call ZotifyDownloader.download_track
+    result = spotify_handler._download_track(mock_track_url, mock_output_dir, mock_playlist_name)
+
+    spotify_handler._zotify_downloader.download_track.assert_called_once_with(
+        mock_track_url,
+        output_dir=mock_output_dir,
+        playlist_name=mock_playlist_name
+    )
+    assert result == {"id": "12345", "path": Path("mock_path"), "skipped": False}
