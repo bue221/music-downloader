@@ -7,7 +7,7 @@
     - [ ] Entender los comandos y opciones principales de Zotify.
 - [x] Tarea: Instalar Zotify como herramienta externa o librería. [3bc8945]
     - [ ] Configurar el entorno para que Zotify sea accesible desde el proyecto.
-- [ ] Tarea: Conductor - User Manual Verification 'Fase 1: Investigación y Configuración de Zotify' (Protocol in workflow.md)
+- [x] Tarea: Conductor - User Manual Verification 'Fase 1: Investigación y Configuración de Zotify' (Protocol in workflow.md)
 
 ## Fase 2: Refactorización y Preparación del Código Existente
 
