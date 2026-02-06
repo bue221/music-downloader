@@ -27,7 +27,7 @@
 - [x] Tarea: Implementar el "wrapper" de Python para Zotify (Green Phase). [6f90c91]
     - [ ] Escribir el código para invocar a Zotify a través del "wrapper".
     - [ ] Conectar el "wrapper" con la lógica existente para Spotify.
-- [ ] Tarea: Refactorizar el código de integración de Zotify.
+- [x] Tarea: Refactorizar el código de integración de Zotify. [75f8e6d]
     - [ ] Mejorar la legibilidad y eficiencia del "wrapper" y la integración.
 - [ ] Tarea: Conductor - User Manual Verification 'Fase 3: Integración de Zotify y Desarrollo del Wrapper' (Protocol in workflow.md)
 
