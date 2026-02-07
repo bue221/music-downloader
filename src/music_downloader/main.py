@@ -5,15 +5,10 @@ Punto de entrada de la aplicación.
 
 import click
 from pathlib import Path
-from dotenv import load_dotenv
 
 from .cache import DownloadCache
 from .youtube import YouTubeDownloader, YouTubeDownloadError
-from .spotify import SpotifyHandler, SpotifyDownloadError
 
-
-# Cargar variables de entorno
-load_dotenv()
 
 # Rutas base
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -29,38 +24,32 @@ def print_status(message: str) -> None:
 @click.group()
 @click.version_option(version="0.1.0")
 def cli():
-    """Music Downloader - Descarga música desde YouTube y Spotify."""
+    """Music Downloader - Descarga música desde YouTube."""
     pass
 
 
 @cli.command()
 @click.option(
-    '--platform', '-p',
-    type=click.Choice(['youtube', 'spotify']),
-    required=True,
-    help='Plataforma de origen'
-)
-@click.option(
     '--url', '-u',
     required=False,
-    help='URL de la canción o playlist'
+    help='URL de la canción o playlist de YouTube'
 )
 @click.option(
     '--file', '-f',
     type=click.Path(exists=True, dir_okay=False),
-    help='Archivo .txt con lista de URLs'
+    help='Archivo .txt con lista de URLs de YouTube'
 )
 @click.option(
     '--name', '-n',
     help='Nombre de la carpeta de destino (obligatorio si usas --file)'
 )
-def download(platform: str, url: str, file: str, name: str):
-    """Descarga música desde la plataforma especificada.
+def download(url: str, file: str, name: str):
+    """Descarga música desde YouTube.
     
     \b
     Ejemplos:
-      music-dl download -p youtube -u "https://youtube.com/watch?v=..."
-      music-dl download -p spotify -f lista.txt -n "My Playlist"
+      music-dl download -u "https://youtube.com/watch?v=..."
+      music-dl download -f lista.txt -n "My Playlist"
     """
     if not url and not file:
         raise click.UsageError("Debes especificar --url o --file")
@@ -96,36 +85,19 @@ def download(platform: str, url: str, file: str, name: str):
     try:
         all_results = []
         
-        if platform == 'youtube':
-            downloader = YouTubeDownloader(
-                music_dir=MUSIC_DIR,
-                cache=cache,
-                on_progress=print_status
-            )
-            
-            for link in urls_to_process:
-                results = downloader.download(
-                    link,
-                    output_dir=custom_output_dir,
-                    playlist_name=name
-                ) 
-                all_results.extend(results)
-            
-        elif platform == 'spotify':
-            handler = SpotifyHandler(
-                music_dir=MUSIC_DIR,
-                cache=cache,
-                on_progress=print_status
-            )
-            
-            for link in urls_to_process:
-                results = handler.download(
-                    link, 
-                    output_dir=custom_output_dir, 
-                    playlist_name=name
-                )
-                all_results.extend(results)
-                    
+        downloader = YouTubeDownloader(
+            music_dir=MUSIC_DIR,
+            cache=cache,
+            on_progress=print_status
+        )
+        
+        for link in urls_to_process:
+            results = downloader.download(
+                link,
+                output_dir=custom_output_dir,
+                playlist_name=name
+            ) 
+            all_results.extend(results)
         
         # Resumen
         downloaded = sum(1 for r in all_results if not r.get('skipped') and not r.get('error'))
@@ -141,9 +113,6 @@ def download(platform: str, url: str, file: str, name: str):
             
     except YouTubeDownloadError as e:
         click.echo(f"❌ Error de descarga: {e}", err=True)
-        raise SystemExit(1)
-    except SpotifyDownloadError as e:
-        click.echo(f"❌ Error de Spotify: {e}", err=True)
         raise SystemExit(1)
     except Exception as e:
         click.echo(f"❌ Error inesperado: {e}", err=True)
@@ -163,9 +132,8 @@ def list_songs():
     click.echo(f"\n📚 Canciones descargadas ({len(songs)} total):\n")
     
     for song in songs:
-        icon = "🎵" if song.get('source') == 'youtube' else "🎧"
         playlist = f" [{song.get('playlist')}]" if song.get('playlist') else ""
-        click.echo(f"  {icon} {song.get('artist', 'Unknown')} - {song.get('title', 'Unknown')}{playlist}")
+        click.echo(f"  🎵 {song.get('artist', 'Unknown')} - {song.get('title', 'Unknown')}{playlist}")
 
 
 @cli.command('clear-cache')
@@ -174,6 +142,14 @@ def clear_cache():
     cache = DownloadCache(CACHE_FILE)
     cache.clear()
     click.echo("✅ Caché limpiado")
+
+
+@cli.command('gui')
+def launch_gui():
+    """Lanza la interfaz gráfica."""
+    from .gui import launch_gui as start_gui
+    click.echo("🚀 Iniciando interfaz gráfica...")
+    start_gui()
 
 
 if __name__ == '__main__':

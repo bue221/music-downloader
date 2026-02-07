@@ -1,21 +1,21 @@
-.PHONY: install download list clean-cache help
+.PHONY: install download list clean-cache gui help
 
 # Variables
-PLATFORM ?= youtube
 URL ?= 
 
 help:
 	@echo "Music Downloader - Comandos disponibles:"
 	@echo ""
 	@echo "  make install              Instala dependencias"
-	@echo "  make download PLATFORM=youtube|spotify URL=<url>"
-	@echo "                            Descarga música desde la plataforma especificada"
+	@echo "  make gui                  Lanza la interfaz gráfica"
+	@echo "  make download URL=<url>   Descarga música desde YouTube"
 	@echo "  make list                 Lista canciones descargadas"
 	@echo "  make clean-cache          Limpia el caché de descargas"
 	@echo ""
 	@echo "Ejemplos:"
-	@echo "  make download PLATFORM=youtube URL=\"https://youtube.com/watch?v=...\""
-	@echo "  make download PLATFORM=spotify URL=\"https://open.spotify.com/playlist/...\""
+	@echo "  make gui"
+	@echo "  make download URL=\"https://youtube.com/watch?v=...\""
+	@echo "  make download URL=\"https://youtube.com/playlist?list=...\""
 
 install:
 	uv sync
@@ -23,10 +23,10 @@ install:
 download:
 ifndef URL
 	@echo "Error: Debes especificar una URL"
-	@echo "Uso: make download PLATFORM=$(PLATFORM) URL=<url>"
+	@echo "Uso: make download URL=<url>"
 	@exit 1
 endif
-	uv run music-dl download --platform $(PLATFORM) --url "$(URL)"
+	uv run music-dl download --url "$(URL)"
 
 list:
 	@echo "Canciones descargadas:"
@@ -35,3 +35,6 @@ list:
 clean-cache:
 	@rm -f .downloaded.json
 	@echo "Caché limpiado"
+
+gui:
+	uv run music-dl gui

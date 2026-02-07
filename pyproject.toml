@@ -1,12 +1,11 @@
 [project]
 name = "music-downloader"
 version = "0.1.0"
-description = "CLI para descargar música desde YouTube y Spotify"
+description = "CLI para descargar música desde YouTube"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.3.1",
-    "python-dotenv>=1.2.1",
     "yt-dlp>=2026.2.4",
 ]
 
