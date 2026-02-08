@@ -1,4 +1,4 @@
-.PHONY: install download list clean-cache gui help
+.PHONY: install download list clean-cache gui gui-qt help
 
 # Variables
 URL ?= 
@@ -7,12 +7,14 @@ help:
 	@echo "Music Downloader - Comandos disponibles:"
 	@echo ""
 	@echo "  make install              Instala dependencias"
-	@echo "  make gui                  Lanza la interfaz gráfica"
+	@echo "  make gui                  Lanza la interfaz gráfica (Tkinter)"
+	@echo "  make gui-qt               Lanza la interfaz moderna (PySide6)"
 	@echo "  make download URL=<url>   Descarga música desde YouTube"
 	@echo "  make list                 Lista canciones descargadas"
 	@echo "  make clean-cache          Limpia el caché de descargas"
 	@echo ""
 	@echo "Ejemplos:"
+	@echo "  make gui-qt"
 	@echo "  make gui"
 	@echo "  make download URL=\"https://youtube.com/watch?v=...\""
 	@echo "  make download URL=\"https://youtube.com/playlist?list=...\""
@@ -38,3 +40,6 @@ clean-cache:
 
 gui:
 	uv run music-dl gui
+
+gui-qt:
+	uv run music-dl gui-qt

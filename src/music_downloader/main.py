@@ -146,10 +146,18 @@ def clear_cache():
 
 @cli.command('gui')
 def launch_gui():
-    """Lanza la interfaz gráfica."""
+    """Lanza la interfaz gráfica (Tkinter)."""
     from .gui import launch_gui as start_gui
-    click.echo("🚀 Iniciando interfaz gráfica...")
+    click.echo("🚀 Iniciando interfaz gráfica (Tkinter)...")
     start_gui()
+
+
+@cli.command('gui-qt')
+def launch_gui_qt():
+    """Lanza la interfaz gráfica moderna (PySide6)."""
+    from .ui import launch_pyside6_gui
+    click.echo("🚀 Iniciando interfaz gráfica moderna (PySide6)...")
+    launch_pyside6_gui()
 
 
 if __name__ == '__main__':

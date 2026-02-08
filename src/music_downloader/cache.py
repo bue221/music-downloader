@@ -110,3 +110,57 @@ class DownloadCache:
         """Limpia todo el caché."""
         self._data = {"songs": {}}
         self._save()
+    
+    def get(self, song_id: str) -> Optional[dict]:
+        """Obtiene información de una canción por ID.
+        
+        Args:
+            song_id: Identificador único de la canción.
+            
+        Returns:
+            Diccionario con información de la canción o None si no existe.
+        """
+        return self._data["songs"].get(song_id)
+    
+    def remove(self, song_id: str) -> bool:
+        """Elimina una canción del caché.
+        
+        Args:
+            song_id: Identificador único de la canción.
+            
+        Returns:
+            True si se eliminó, False si no existía.
+        """
+        if song_id in self._data["songs"]:
+            del self._data["songs"][song_id]
+            self._save()
+            return True
+        return False
+    
+    def update_song(
+        self,
+        song_id: str,
+        path: Optional[str] = None,
+        playlist: Optional[str] = None
+    ) -> bool:
+        """Actualiza información de una canción.
+        
+        Args:
+            song_id: Identificador único de la canción.
+            path: Nueva ruta del archivo (opcional).
+            playlist: Nueva playlist (opcional).
+            
+        Returns:
+            True si se actualizó, False si no existía.
+        """
+        if song_id not in self._data["songs"]:
+            return False
+        
+        if path is not None:
+            self._data["songs"][song_id]["path"] = path
+        
+        if playlist is not None:
+            self._data["songs"][song_id]["playlist"] = playlist
+        
+        self._save()
+        return True

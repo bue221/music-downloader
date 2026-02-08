@@ -9,6 +9,7 @@ from typing import Callable, Optional
 
 from .cache import DownloadCache
 from .utils import sanitize_filename, ensure_directory, is_playlist_url
+from .filesystem import set_video_id_to_mp3, is_song_downloaded, find_song_by_video_id
 
 
 class YouTubeDownloadError(Exception):
@@ -112,15 +113,16 @@ class YouTubeDownloader:
         title = info.get('title', 'Unknown')
         artist = info.get('uploader', info.get('channel', 'Unknown'))
         
-        # Verificar si ya está descargada
-        if self._cache.is_downloaded(video_id):
+        # Verificar si ya está descargada usando filesystem
+        if is_song_downloaded(self._music_dir, video_id):
             self._on_progress(f"⏭️  Ya descargada: {title}")
+            existing_song = find_song_by_video_id(self._music_dir, video_id)
             return {
                 "id": video_id,
                 "title": title,
                 "artist": artist,
                 "skipped": True,
-                "path": self._cache.get_path(video_id)
+                "path": existing_song.get('path') if existing_song else None
             }
         
         # Determinar directorio de salida
@@ -145,14 +147,18 @@ class YouTubeDownloader:
         except Exception as e:
             raise YouTubeDownloadError(f"Error descargando {url}: {e}") from e
         
-        # Registrar en caché
-        final_path = str(output_dir / f"{safe_title}.mp3")
+        # Guardar metadatos completos en el MP3
+        final_path = output_dir / f"{safe_title}.mp3"
+        from .filesystem import save_mp3_metadata
+        save_mp3_metadata(final_path, title, artist, video_id)
+        
+        # Registrar en caché (mantener por compatibilidad)
         self._cache.register(
             song_id=video_id,
             title=title,
             artist=artist,
             source="youtube",
-            path=final_path,
+            path=str(final_path),
             playlist_name=playlist_name
         )
         
@@ -163,7 +169,7 @@ class YouTubeDownloader:
             "title": title,
             "artist": artist,
             "skipped": False,
-            "path": final_path
+            "path": str(final_path)
         }
     
     def _download_playlist(
