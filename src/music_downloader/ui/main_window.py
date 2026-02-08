@@ -67,8 +67,9 @@ class MainWindow(QMainWindow):
         # Configurar icono
         icon_path = STYLES_DIR.parent / "resources" / "icon.png"
         if icon_path.exists():
-            from PySide6.QtGui import QIcon
-            self.setWindowIcon(QIcon(str(icon_path)))
+            self.setWindowIcon(QIcon(str(icon_path.resolve())))
+        else:
+            print(f"⚠️ Icono de ventana no encontrado en: {icon_path}")
         
         # Centrar ventana
         self._center_window()
@@ -510,7 +511,7 @@ class MainWindow(QMainWindow):
 def launch_pyside6_gui():
     """Función de entrada para lanzar la GUI de PySide6."""
     from PySide6.QtWidgets import QApplication
-    from PySide6.QtGui import QPalette, QColor
+    from PySide6.QtGui import QPalette, QColor, QIcon
     import sys
     
     app = QApplication(sys.argv)
@@ -518,6 +519,20 @@ def launch_pyside6_gui():
     # Configurar aplicación
     app.setApplicationName("Music Downloader")
     app.setOrganizationName("MusicDownloader")
+    
+    # Configurar icono de la aplicación (necesario para macOS)
+    icon_path = STYLES_DIR.parent / "resources" / "icon.png"
+    icon_path_abs = icon_path.resolve()
+    print(f"🔍 Buscando icono en: {icon_path_abs}")
+    sys.stdout.flush()
+    
+    if icon_path.exists():
+        app.setWindowIcon(QIcon(str(icon_path_abs)))
+        print(f"✅ Icono de aplicación configurado correctamente")
+        sys.stdout.flush()
+    else:
+        print(f"⚠️ Icono no encontrado en: {icon_path_abs}")
+        sys.stdout.flush()
     
     # Forzar paleta oscura a nivel de aplicación (afecta modales también)
     palette = QPalette()
